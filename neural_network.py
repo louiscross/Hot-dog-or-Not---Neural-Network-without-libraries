@@ -131,9 +131,13 @@ class NeuralNetwork:
         
         best_error = float('inf')
         epochs_without_improvement = 0
+        initial_learning_rate = learning_rate
         
         for epoch in range(epochs):
             total_error = 0
+            
+            # Learning rate decay
+            learning_rate = initial_learning_rate / (1 + epoch / 100)  # Decay learning rate over time
             
             # Shuffle training data
             combined = list(zip(training_data, targets))
@@ -153,14 +157,14 @@ class NeuralNetwork:
                 # Backward propagate
                 self.backward_propagate(inputs, target, learning_rate)
             
-            # Early stopping check
+            # Early stopping check with more patience
             if total_error < best_error:
                 best_error = total_error
                 epochs_without_improvement = 0
             else:
                 epochs_without_improvement += 1
-                if epochs_without_improvement > 50:  # Stop if no improvement for 50 epochs
-                    print("\nStopping early - no improvement in error")
+                if epochs_without_improvement > 100:  # Increased patience from 50 to 100 epochs
+                    print("\nStopping early - no improvement in error for 100 epochs")
                     break
             
             # Show progress bar
@@ -168,7 +172,7 @@ class NeuralNetwork:
                 print("=", end="", flush=True)
             
             if epoch % 100 == 0:
-                print(f"\nEpoch {epoch}, Error: {total_error:.4f}")
+                print(f"\nEpoch {epoch}, Error: {total_error:.4f}, Learning Rate: {learning_rate:.6f}")
         
         print("] Done!")
 

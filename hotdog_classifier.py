@@ -73,8 +73,8 @@ def train_hotdog_classifier(force_retrain=False):
     print(f"- Not hotdogs: {len(not_hotdog_images)}")
     
     # Simple but effective network
-    nn = NeuralNetwork([1728, 32, 1])
-    nn.train(training_data, targets, learning_rate=0.001, epochs=300)
+    nn = NeuralNetwork([1728, 128, 64, 1])
+    nn.train(training_data, targets, learning_rate=0.01, epochs=1000)
     
     # Save the trained model
     nn.save_model(MODEL_FILE)
